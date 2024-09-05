@@ -49,6 +49,12 @@ const RootLayout1 = () => {
           headerShown: false
         }}
       />
+      <Stack.Screen
+        name='(home)'
+        options={{
+          headerShown: false
+        }}
+      />
     </Stack>
     </Provider>
   )
