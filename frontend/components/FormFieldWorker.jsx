@@ -41,7 +41,7 @@ const FormFieldWorker = () => {
         } finally {
             setIsLoading(false);
             dispatch(setIsOfficer(false))
-            router.push('/home');
+            router.replace('/home-worker');
         }
     };
 

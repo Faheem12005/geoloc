@@ -40,7 +40,7 @@ const FormFieldOfficer = () => {
             Alert.alert('Login Failed', 'An error occurred while trying to log in.')
         } finally {
             dispatch(setIsOfficer(true))
-            router.push('/home')
+            router.replace('/home-officer')
             setIsLoading(false)
         }
     }
@@ -50,7 +50,7 @@ const FormFieldOfficer = () => {
             <Text className="text-white font-pmedium">
                 Enter UserId
             </Text>
-            <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100">
+            <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100 focus:border-white" >
                 <TextInput
                     className="flex-1 justify-end text-white font-pmedium"
                     value={form.userid}
@@ -61,7 +61,7 @@ const FormFieldOfficer = () => {
             <Text className="text-white font-pmedium">
                 Enter Password
             </Text>
-            <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100">
+            <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100 focus:border-white">
                 <TextInput
                     className="flex-1 justify-end text-white font-pmedium"
                     value={form.password}

@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-const Create = () => {
+
+const Records = () => {
   return (
     <SafeAreaView>
-      <Text>Add Leaves</Text>
+      <Text>Records</Text>
     </SafeAreaView>
   )
 }
 
-export default Create
+export default Records
+
