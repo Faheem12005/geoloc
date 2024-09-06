@@ -9,8 +9,9 @@ const YOUR_TASK_NAME = 'bg-loc-check'
   }
   if (eventType === GeofencingEventType.Enter) {
     const userId = await AsyncStorage.getItem('userId');
-    
+
   } else if (eventType === GeofencingEventType.Exit) {
+    const userId = await AsyncStorage.getItem('userId');
     console.log("You've left region:", region);
   }
 }); 

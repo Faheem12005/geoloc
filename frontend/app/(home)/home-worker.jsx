@@ -11,9 +11,9 @@ const YOUR_TASK_NAME = 'bg-loc-check';
 const regions = [
   {
     identifier: 'WorksiteRegion',
-    latitude: 12.899192509493218,  // Example latitude
-    longitude: 80.22589542460639, // Example longitude
-    radius: 200, // Radius in meters
+    latitude: 12.899192509493218,
+    longitude: 80.22589542460639, 
+    radius: 200,
     notifyOnEnter: true,
     notifyOnExit: true,
   },

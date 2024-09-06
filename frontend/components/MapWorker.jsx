@@ -31,9 +31,12 @@
     const [canCheckIn,setCanCheckIn] = useState(false);
     const [checkedIn,setCheckedIn] = useState(false);
 
-    const handlePress = async () => {
-      
+    const handlePressCheckIn = async () => {
+      //get user id from asyncstorage, then fetch to server
       setCheckedIn(true)
+    }
+    const handlePressCheckOut = async () => {
+      setCheckedIn(false)
     }
 
     useEffect(() => {
@@ -97,10 +100,10 @@
               />
           </MapView>
           <CustomButton
-          title={checkedIn ? 'Checked In' : 'Check in'}
+          title={checkedIn ? 'Check Out' : 'Check in'}
           disabled={!canCheckIn}
           style={checkedIn ? "bg-green-300" : null}
-          handlePress={handlePress}
+          handlePress={checkedIn ? handlePressCheckOut : handlePressCheckIn}
           />
           {canCheckIn ? null : <Text className="text-red-600 mt-4 font-psemibold">Cant Check In</Text>}
         </SafeAreaView>
