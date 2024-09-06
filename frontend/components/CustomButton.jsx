@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View,TouchableOpacity, Image } from 'react-native'
 import React from 'react'
-const CustomButton = ({title,handlePress,isLoading,image = null}) => {
+const CustomButton = ({title,handlePress,isLoading,image = null,disabled}) => {
 
   return (
-    <TouchableOpacity className="bg-white w-full mt-7 py-4 rounded-md items-center" onPress={handlePress}>
+    <TouchableOpacity className="bg-white w-full mt-7 py-4 rounded-md items-center" onPress={handlePress} disabled={disabled}>
       { image && 
         <Image
         source={image}
-        className="h-12"
+        className={"h-12"}
         resizeMode="contain"
         />
       }
@@ -19,5 +19,3 @@ const CustomButton = ({title,handlePress,isLoading,image = null}) => {
 }
 
 export default CustomButton
-
-const styles = StyleSheet.create({})
