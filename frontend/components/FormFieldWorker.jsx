@@ -32,7 +32,8 @@ const FormFieldWorker = () => {
             }
 
             const data = await response.json();
-
+            await AsyncStorage.setItem('userId', userId);
+            await AsyncStorage.setItem('isOfficer', JSON.stringify(false));
             console.log(data);
             
         } catch (error) {

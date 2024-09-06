@@ -4,6 +4,7 @@ import CustomButton from './CustomButton'
 import { router } from 'expo-router'
 import { useDispatch } from 'react-redux'
 import { setIsOfficer } from '../app/redux/features/workerSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const FormFieldOfficer = () => {
     const dispatch = useDispatch();
@@ -32,7 +33,8 @@ const FormFieldOfficer = () => {
             }
 
             const data = await response.json()
-
+            await AsyncStorage.setItem('userId', userId);
+            await AsyncStorage.setItem('isOfficer', JSON.stringify(true));
             console.log(data)
             
         } catch (error) {

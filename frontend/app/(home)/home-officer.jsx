@@ -6,7 +6,7 @@ import { router } from 'expo-router'
 
 const HomeOfficer = () => {
     const handleCheck = () => {
-        console.log('checking');
+        router.push('check-attendance')
     }
   return (
     <SafeAreaView className="h-full bg-primary px-8 flex justify-center items-center">
@@ -20,5 +20,3 @@ const HomeOfficer = () => {
 }
 
 export default HomeOfficer
-
-const styles = StyleSheet.create({})

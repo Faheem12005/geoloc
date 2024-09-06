@@ -14,6 +14,9 @@ const HomeLayout = () => {
         <Stack.Screen
             name='check-in' options={{headerShown: false}}
         />
+        <Stack.Screen
+            name='check-attendance' options={{headerShown: false}}
+        />
     </Stack>
   )
 }
