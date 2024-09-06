@@ -28,6 +28,7 @@ const MapWorker = () => {
   const [checkedIn,setCheckedIn] = useState(false);
 
   const handlePress = async () => {
+    
     setCheckedIn(true)
   }
 
@@ -95,6 +96,7 @@ const MapWorker = () => {
         <CustomButton
         title={checkedIn ? 'Checked In' : 'Check in'}
         disabled={!canCheckIn}
+        style={checkedIn ? "bg-green-300" : null}
         handlePress={handlePress}
         />
         {canCheckIn ? null : <Text className="text-red-600 mt-4 font-psemibold">Cant Check In</Text>}
