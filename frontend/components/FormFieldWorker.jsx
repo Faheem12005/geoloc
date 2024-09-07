@@ -4,46 +4,69 @@ import CustomButton from './CustomButton';
 import { router } from 'expo-router';
 import { useDispatch } from 'react-redux';
 import { setIsOfficer } from '../app/redux/features/workerSlice';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore, collection, getDocs, doc, getDoc } from 'firebase/firestore';
 
 const FormFieldWorker = () => {
+    const db = getFirestore();
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [form, setForm] = useState({
-        userid: '',
+        workerid: '',
         officeid: '',
     });
 
     const handleLogin = async () => {
         setIsLoading(true);
-        try {
-            const response = await fetch('worker/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userid: form.userid,
-                    officeid: form.officeid,
-                }),
-            });
+        const { workerid, officeid } = form;
+        console.log('Form Data:', { workerid, officeid });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+        try {
+            // Query to find all officer documents
+            const officerSnapshot = await getDocs(collection(db, 'officers'));
+            console.log('Officers Snapshot:', officerSnapshot.empty ? 'No officers found' : 'Officers found');
+
+            let validWorkerFound = false;
+
+            // Iterate through the officers to check if the office and workerId match
+            for (const officerDoc of officerSnapshot.docs) {
+                console.log('Officer ID:', officerDoc.id);
+                const officeDocRef = doc(db, 'officers', officerDoc.id, 'offices', officeid);
+                const officeDocSnap = await getDoc(officeDocRef);
+                console.log('Office Document Snapshot:', officeDocSnap.exists() ? 'Office found' : 'Office not found');
+
+                if (officeDocSnap.exists()) {
+                    const officeData = officeDocSnap.data();
+                    console.log('Office Data:', officeData);
+
+                    const workers = officeData.workers || [];
+                    console.log('Workers Array:', workers);
+
+                    if (workers.includes(workerid)) {
+                        // Store user data in AsyncStorage
+                        await AsyncStorage.setItem('officeId', officeid);
+                        await AsyncStorage.setItem('officeData',JSON.stringify(officeData));
+                        await AsyncStorage.setItem('isOfficer', JSON.stringify(false));
+
+                        console.log('Login successful', officeData);
+
+                        // Navigate to the home page for workers
+                        router.replace('/home-worker');
+                        dispatch(setIsOfficer(false));
+                        validWorkerFound = true;
+                        break;
+                    }
+                }
             }
 
-            const data = await response.json();
-            await AsyncStorage.setItem('userId', userId);
-            await AsyncStorage.setItem('isOfficer', JSON.stringify(false));
-            console.log(data);
-            
+            if (!validWorkerFound) {
+                throw new Error('No valid office-worker association found');
+            }
         } catch (error) {
-            console.error(error);
-            Alert.alert('Login Failed', 'An error occurred while trying to log in.');
+            console.error('Login Error:', error);
+            Alert.alert('Login Failed', error.message);
         } finally {
             setIsLoading(false);
-            dispatch(setIsOfficer(false))
-            router.replace('/home-worker');
         }
     };
 
@@ -55,9 +78,9 @@ const FormFieldWorker = () => {
             <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100">
                 <TextInput
                     className="flex-1 justify-end text-white font-pmedium"
-                    value={form.userid}
+                    value={form.workerid}
                     keyboardType='email-address'
-                    onChangeText={(e) => setForm({ ...form, userid: e })}
+                    onChangeText={(e) => setForm({ ...form, workerid: e })}
                 />
             </View>
             <Text className="text-white font-pmedium">
