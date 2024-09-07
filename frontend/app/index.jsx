@@ -10,7 +10,7 @@ export default function App() {
       <ScrollView contentContainerStyle={{height: '100%'}}>
         <View className="w-full justify-center items-center h-full px-4">
           <Text className="text-white font-psemibold text-xl">
-            Welcome To GeoLoc!
+            Welcome To GeoLoc! v2
           </Text>
           <CustomButton
             title="Head Officer"
