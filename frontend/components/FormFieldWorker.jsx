@@ -2,14 +2,11 @@ import { StyleSheet, Text, TextInput, View, ActivityIndicator, Alert } from 'rea
 import React, { useState } from 'react';
 import CustomButton from './CustomButton';
 import { router } from 'expo-router';
-import { useDispatch } from 'react-redux';
-import { setIsOfficer } from '../app/redux/features/workerSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getFirestore, collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { db } from '../app/firebaseConfig';
 
 const FormFieldWorker = () => {
-    const db = getFirestore();
-    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [form, setForm] = useState({
         workerid: '',
@@ -62,7 +59,6 @@ const FormFieldWorker = () => {
 
                         // Navigate to worker's home page
                         router.replace('/home-worker');
-                        dispatch(setIsOfficer(false));
                         validWorkerFound = true;
                         break;
                     }

@@ -2,14 +2,12 @@ import { StyleSheet, Text, TextInput, View, ActivityIndicator, Alert } from 'rea
 import React, { useState } from 'react';
 import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
-import { useDispatch } from 'react-redux';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getFirestore, doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
+import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { auth,db } from '../firebaseConfig';
 const SignUpOfficer = () => {
-    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [form, setForm] = useState({
         userid: '',
@@ -19,8 +17,6 @@ const SignUpOfficer = () => {
 
     const handleSignUp = async () => {
         setIsLoading(true);
-        const auth = getAuth();
-        const db = getFirestore(); // Initialize Firestore
 
         try {
             // Create user with email and password using Firebase Authentication

@@ -5,8 +5,8 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import CustomButton from '../../components/CustomButton';
+import { db } from '../firebaseConfig';
 
-const db = getFirestore();
 
 const CheckAttendance = () => {
   const [workerId, setWorkerId] = useState('');

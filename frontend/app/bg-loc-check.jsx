@@ -3,10 +3,10 @@ import * as TaskManager from 'expo-task-manager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const YOUR_TASK_NAME = 'bg-loc-check'
 import { getFirestore, doc, getDocs, setDoc, updateDoc, collection, query, where } from 'firebase/firestore';
-
+import { db } from './firebaseConfig';
 
 const handleCheckIn = async (officeId, workerId) => {
-  const db = getFirestore();
+
   const date = new Date().toISOString().split('T')[0];
   const currentTime = new Date().toISOString();
 

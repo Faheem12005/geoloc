@@ -1,10 +1,8 @@
-import { Text, View } from 'react-native'
 import React from 'react'
 import { SplashScreen,Stack } from 'expo-router'
 import { useFonts } from 'expo-font'
 import { useEffect } from 'react'
-import { Provider } from 'react-redux'
-import store from './redux/stores/userStore'
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,7 +32,6 @@ const RootLayout1 = () => {
     return null;
   }
   return (
-    <Provider store={store}>
     <Stack>
       <Stack.Screen name='index' options={{headerShown: false}}/>
       <Stack.Screen
@@ -50,7 +47,6 @@ const RootLayout1 = () => {
         }}
       />
     </Stack>
-    </Provider>
   )
 }
 

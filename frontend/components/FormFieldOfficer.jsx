@@ -2,14 +2,12 @@ import { Text, TextInput, View, ActivityIndicator, Alert } from 'react-native';
 import React, { useState } from 'react';
 import CustomButton from './CustomButton';
 import { router, Link } from 'expo-router';
-import { useDispatch } from 'react-redux';
-import { setIsOfficer } from '../app/redux/features/workerSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc, getFirestore, collection, getDocs } from 'firebase/firestore';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { auth,db } from '../app/firebaseConfig';
 
 const FormFieldOfficer = () => {
-    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [form, setForm] = useState({
         userid: '',
@@ -19,8 +17,6 @@ const FormFieldOfficer = () => {
 
     const handleLogin = async () => {
         setIsLoading(true);
-        const auth = getAuth();
-        const db = getFirestore();
 
         try {
             const userCredential = await signInWithEmailAndPassword(auth, form.userid, form.password);
@@ -47,7 +43,6 @@ const FormFieldOfficer = () => {
                 await AsyncStorage.setItem('officeIds', JSON.stringify(officeList)).then(() => console.log(officeList));
 
                 router.replace('/home-officer');
-                dispatch(setIsOfficer(true));
             } else {
                 console.log('No such document!');
                 throw new Error('No such user found');

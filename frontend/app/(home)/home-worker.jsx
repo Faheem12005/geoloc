@@ -1,11 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getFirestore, doc, getDocs, setDoc, updateDoc, collection, query, where } from 'firebase/firestore';
+import { doc, getDocs, setDoc, updateDoc, collection, query, where } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 
 
 const YOUR_TASK_NAME = 'bg-loc-check';
@@ -32,7 +32,6 @@ const HomeWorker = () => {
     };
 
     const CheckIn = async () => {
-        const db = getFirestore();
         const officeId = await AsyncStorage.getItem('officeId');
         const workerId = await AsyncStorage.getItem('workerId');
         const officerId = await AsyncStorage.getItem('officerId');
