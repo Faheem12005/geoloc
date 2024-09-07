@@ -160,11 +160,12 @@ const HomeWorker = () => {
             <CustomButton
                 title={'Check Office Locations'}
                 handlePress={() => router.push('/locations')}
+                image={require('../../assets/icons/map.png')}
             />
             <CustomButton
                 title={'Mark Attendance Offsite'}
                 handlePress={() => router.push('/check-in')}
-                image={require('../../assets/icons/map.png')}
+                image={require('../../assets/icons/plus.png')}
             />
         </SafeAreaView>
     );
