@@ -4,6 +4,7 @@ import MapView, { Circle, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const MapWorker = () => {
   const [location, setLocation] = useState(null);
@@ -72,6 +73,7 @@ const MapWorker = () => {
   return (
     <SafeAreaView className="h-full w-full bg-primary flex-1 justify-center items-center px-4">
       <MapView
+        provider={PROVIDER_GOOGLE}
         className="w-full h-4/6"
         initialRegion={location}
         region={location} 

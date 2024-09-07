@@ -21,6 +21,11 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.faheem12005.aora",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAB1SHnuYzsNJ_rYyR1Gt1E4GYVZ_KcSUw"
+        }
+      },
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
