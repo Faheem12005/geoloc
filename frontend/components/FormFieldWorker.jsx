@@ -85,7 +85,7 @@ const FormFieldWorker = () => {
             <Text className="text-white font-pmedium">
                 Enter UserId
             </Text>
-            <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100">
+            <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100 focus:border-white">
                 <TextInput
                     className="flex-1 justify-end text-white font-pmedium"
                     value={form.workerid}
@@ -96,7 +96,7 @@ const FormFieldWorker = () => {
             <Text className="text-white font-pmedium">
                 Enter OfficeId
             </Text>
-            <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100">
+            <View className="border-2 border-black-200 w-full h-16 px-4 rounded-2xl bg-black-100 focus:border-white">
                 <TextInput
                     className="flex-1 justify-end text-white font-pmedium"
                     value={form.officeid}
