@@ -44,8 +44,9 @@ const FormFieldWorker = () => {
 
                     if (workers.includes(workerid)) {
                         // Store user data in AsyncStorage
+                        await AsyncStorage.setItem('workerId', workerid);
                         await AsyncStorage.setItem('officeId', officeid);
-                        await AsyncStorage.setItem('officeData',JSON.stringify(officeData));
+                        await AsyncStorage.setItem('officeData',JSON.stringify(officeData))
                         await AsyncStorage.setItem('isOfficer', JSON.stringify(false));
 
                         console.log('Login successful', officeData);

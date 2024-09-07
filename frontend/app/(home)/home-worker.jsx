@@ -21,7 +21,10 @@ const regions = [
 
 const HomeWorker = () => {
     const handleCheck = () => {
-        router.push('check-in')
+        router.push('/check-in')
+    }
+    const handleLocs = () => {
+        router.push('/locations');
     }
 
     useEffect(() => {
@@ -52,6 +55,10 @@ const HomeWorker = () => {
 
   return (
     <SafeAreaView className="h-full bg-primary px-8 flex justify-center items-center">
+        <CustomButton
+            title={'Check Office Locations'}
+            handlePress={handleLocs}
+        />
         <CustomButton
             title={'Mark Attendance Offsite'}
             handlePress={handleCheck}

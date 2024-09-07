@@ -12,10 +12,10 @@ const HomeLayout = () => {
             name='home-worker' options={{headerShown: false}}
         />
         <Stack.Screen
-            name='check-in' options={{headerShown: false}}
+            name='check-attendance' options={{headerShown: false}}
         />
         <Stack.Screen
-            name='check-attendance' options={{headerShown: false}}
+            name='(worker)' options={{headerShown: false}}
         />
     </Stack>
   )

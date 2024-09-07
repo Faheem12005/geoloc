@@ -37,7 +37,6 @@ const SignUpOfficer = () => {
             // Store user data in AsyncStorage
             await AsyncStorage.setItem('userId', user.uid);
             await AsyncStorage.setItem('isOfficer', JSON.stringify(true));
-            
             console.log('Sign Up successful', { email: form.userid, officeid: form.officeid });
 
             // Redirect to sign-on-officer screen
