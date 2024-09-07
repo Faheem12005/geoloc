@@ -3,7 +3,7 @@
     "name": "aora",
     "slug": "aora",
     "scheme": "aora",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -33,12 +33,15 @@
     },
     "plugins": [
       [
-        "expo-router",
+        "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow aora to use your location.",
           "isAndroidForegroundServiceEnabled" : true,
           "isAndroidBackgroundLocationEnabled": true
         }
+      ],
+      [
+        "expo-router"
       ]
     ],
     "extra": {
