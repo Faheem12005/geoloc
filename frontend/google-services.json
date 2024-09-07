@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "403225222655",
+    "project_id": "geoloc-2f504",
+    "storage_bucket": "geoloc-2f504.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403225222655:android:9090717d2d9b9ebaf15bca",
+        "android_client_info": {
+          "package_name": "com.sih.geoloc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANehlUZUEFkqJdV419ws9eS4ANWp3LOw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
