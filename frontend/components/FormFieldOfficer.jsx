@@ -78,6 +78,7 @@ const FormFieldOfficer = () => {
                 disabled={isLoading}
             />
             {isLoading && <ActivityIndicator size="large" color="#fff" />}
+            <Text className="font-psemibold text-white mt-5">Not A Registered User yet? Sign In</Text>
         </View>
     )
 }
