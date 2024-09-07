@@ -1,71 +1,138 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import CustomButton from '../../components/CustomButton'
-import { router } from 'expo-router'
-import { useEffect } from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomButton from '../../components/CustomButton';
+import { router } from 'expo-router';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const YOUR_TASK_NAME = 'bg-loc-check';
 
-const regions = [
-  {
-    identifier: 'WorksiteRegion',
-    latitude: 12.899192509493218,
-    longitude: 80.22589542460639, 
-    radius: 200,
-    notifyOnEnter: true,
-    notifyOnExit: true,
-  },
-];
-
 const HomeWorker = () => {
-    const handleCheck = () => {
-        router.push('/check-in')
-    }
-    const handleLocs = () => {
-        router.push('/locations');
-    }
+    const [officeCoordinates, setOfficeCoordinates] = useState(null);
+    const [userLocation, setUserLocation] = useState(null);
+    const [isGeofencingActive, setIsGeofencingActive] = useState(false);
+
+    const getDistance = (lat1, lon1, lat2, lon2) => {
+        const toRadians = (deg) => deg * (Math.PI / 180);
+        const R = 6371e3;
+
+        const dLat = toRadians(lat2 - lat1);
+        const dLon = toRadians(lon2 - lon1);
+
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c; 
+    };
+
+    const performAsyncTask = async () => {
+        
+    };
 
     useEffect(() => {
-      const setupGeofencing = async () => {
-          const { status } = await Location.requestBackgroundPermissionsAsync();
-          if (status !== 'granted') {
-              console.log('Permission to access location was denied');
-              return;
-          }
+        const checkProximity = async () => {
+            try {
+                const officeData = await AsyncStorage.getItem('officeData');
+                if (officeData) {
+                    const parsedOfficeData = JSON.parse(officeData);
+                    setOfficeCoordinates({
+                        latitude: parsedOfficeData.latitude,
+                        longitude: parsedOfficeData.longitude,
+                    });
+                    console.log('Office Coordinates:', parsedOfficeData);
 
-          await Location.startGeofencingAsync(YOUR_TASK_NAME, regions).then(()=> {console.log("geofencing...")}).catch((error) => {
-              console.error('Error starting geofencing', error);
-          });
-      };
+                    let { status } = await Location.requestForegroundPermissionsAsync();
+                    if (status !== 'granted') {
+                        console.error('Permission to access location was denied');
+                        return;
+                    }
 
-      const stopGeofencing = async () => {
-          await Location.stopGeofencingAsync(YOUR_TASK_NAME).then(()=> {console.log("stopped geofencing")}).catch((error) => {
-              console.error('Error stopping geofencing', error);
-          });
-      };
+                    const location = await Location.getCurrentPositionAsync({});
+                    setUserLocation(location.coords);
 
-      setupGeofencing();
+                    const distance = getDistance(
+                        location.coords.latitude,
+                        location.coords.longitude,
+                        parsedOfficeData.latitude,
+                        parsedOfficeData.longitude
+                    );
 
-      return () => {
-          stopGeofencing(); 
-      };
-  }, []);
+                    console.log(`Distance to office: ${distance} meters`);
 
-  return (
-    <SafeAreaView className="h-full bg-primary px-8 flex justify-center items-center">
-        <CustomButton
-            title={'Check Office Locations'}
-            handlePress={handleLocs}
-        />
-        <CustomButton
-            title={'Mark Attendance Offsite'}
-            handlePress={handleCheck}
-            image={require('../../assets/icons/map.png')}
-        />
-    </SafeAreaView>
-  )
-}
+                    if (distance <= 200) {
+                        await performAsyncTask(); 
+                    } else {
+                        console.log('You are not within 200 meters of the office.');
+                    }
+                } else {
+                    console.error('Office data not found in AsyncStorage');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
 
-export default HomeWorker
+        checkProximity();
+    }, []);
+
+    useEffect(() => {
+        if (!officeCoordinates) return;
+    
+        const setupGeofencing = async () => {
+            const { status } = await Location.requestBackgroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.log('Permission to access background location was denied');
+                return;
+            }
+    
+            // Start geofencing if it's not already active
+            if (!isGeofencingActive) {
+                try {
+                    await Location.startGeofencingAsync(YOUR_TASK_NAME, [{
+                        latitude: parseFloat(officeCoordinates.latitude),
+                        longitude: parseFloat(officeCoordinates.longitude),
+                        radius: 200
+                    }]).then(()=> {console.log("geofencing...")}).catch((error) => {
+                        console.error('Error starting geofencing', error);
+                        setIsGeofencingActive(true);
+                    });
+                } catch (error) {
+                    console.error('Error starting geofencing', error);
+                }
+            }
+        };
+
+        const stopGeofencing = async () => {
+            await Location.stopGeofencingAsync(YOUR_TASK_NAME).then(()=> {console.log("stopped geofencing")}).catch((error) => {
+                console.error('Error stopping geofencing', error);
+            });
+        };
+    
+        setupGeofencing();
+    
+        return () => {
+            stopGeofencing();
+        };
+    }, [officeCoordinates]); 
+    
+
+    return (
+        <SafeAreaView className="h-full bg-primary px-8 flex justify-center items-center">
+            <CustomButton
+                title={'Check Office Locations'}
+                handlePress={() => router.push('/locations')}
+            />
+            <CustomButton
+                title={'Mark Attendance Offsite'}
+                handlePress={() => router.push('/check-in')}
+                image={require('../../assets/icons/map.png')}
+            />
+        </SafeAreaView>
+    );
+};
+
+export default HomeWorker;
