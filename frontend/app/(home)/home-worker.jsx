@@ -5,6 +5,8 @@ import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore, doc, getDocs, setDoc, updateDoc, collection, query, where } from 'firebase/firestore';
+
 
 const YOUR_TASK_NAME = 'bg-loc-check';
 
@@ -29,8 +31,41 @@ const HomeWorker = () => {
         return R * c; 
     };
 
-    const performAsyncTask = async () => {
-        
+    const CheckIn = async () => {
+        const db = getFirestore();
+        const officeId = await AsyncStorage.getItem('officeId');
+        const workerId = await AsyncStorage.getItem('workerId');
+        const officerId = await AsyncStorage.getItem('officerId');
+        const date = new Date().toISOString().split('T')[0]; 
+        const currentTime = new Date().toISOString(); 
+    
+        try {
+            const checkInsRef = collection(db, `officers/${officerId}/offices/${officeId}/workers/${workerId}/checkins`);
+            
+            const q = query(checkInsRef, where('date', '==', date));
+            const querySnapshot = await getDocs(q);
+    
+            if (!querySnapshot.empty) {
+                const docSnap = querySnapshot.docs[0];
+                const docRef = doc(db, docSnap.ref.path);
+    
+                const data = docSnap.data();
+                if (!data.checkInTime) {
+                    await updateDoc(docRef, { checkInTime: currentTime });
+                    console.log('Check-in time recorded.');
+                } 
+            } else {
+                const newDocRef = doc(checkInsRef, date);
+                await setDoc(newDocRef, {
+                    date: date,
+                    checkInTime: currentTime,
+                    checkOutTime: null,
+                });
+                console.log('New check-in record created.');
+            }
+        } catch (error) {
+            console.error('Error checking in:', error);
+        }
     };
 
     useEffect(() => {
@@ -64,7 +99,7 @@ const HomeWorker = () => {
                     console.log(`Distance to office: ${distance} meters`);
 
                     if (distance <= 200) {
-                        await performAsyncTask(); 
+                        await CheckIn(); 
                     } else {
                         console.log('You are not within 200 meters of the office.');
                     }

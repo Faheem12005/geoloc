@@ -51,6 +51,7 @@ const FormFieldWorker = () => {
                         console.log('Worker Data:', workerData);
 
                         // Store worker data in AsyncStorage
+                        await AsyncStorage.setItem('officerId',officerDoc.id);
                         await AsyncStorage.setItem('workerId', workerid);
                         await AsyncStorage.setItem('officeId', officeid);
                         await AsyncStorage.setItem('officeData', JSON.stringify(officeData));
