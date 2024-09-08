@@ -1,8 +1,8 @@
-import { StyleSheet, Text, TextInput, View, ActivityIndicator, Alert } from 'react-native';
+import { Text, TextInput, View, ActivityIndicator, Alert } from 'react-native';
 import React, { useState } from 'react';
 import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
 import { SafeAreaView } from 'react-native-safe-area-context';

@@ -12,7 +12,6 @@ const YOUR_TASK_NAME = 'bg-loc-check';
 
 const HomeWorker = () => {
     const [officeCoordinates, setOfficeCoordinates] = useState(null);
-    const [userLocation, setUserLocation] = useState(null);
     const [isGeofencingActive, setIsGeofencingActive] = useState(false);
 
     const getDistance = (lat1, lon1, lat2, lon2) => {
@@ -86,7 +85,6 @@ const HomeWorker = () => {
                     }
 
                     const location = await Location.getCurrentPositionAsync({});
-                    setUserLocation(location.coords);
 
                     const distance = getDistance(
                         location.coords.latitude,

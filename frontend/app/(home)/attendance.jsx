@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, View, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import CustomButton from '../../components/CustomButton';

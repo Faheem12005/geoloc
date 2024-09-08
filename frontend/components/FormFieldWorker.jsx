@@ -19,17 +19,14 @@ const FormFieldWorker = () => {
         console.log('Form Data:', { workerid, officeid });
 
         try {
-            // Query to find all officer documents
             const officerSnapshot = await getDocs(collection(db, 'officers'));
             console.log('Officers Snapshot:', officerSnapshot.empty ? 'No officers found' : 'Officers found');
 
             let validWorkerFound = false;
 
-            // Iterate through the officers to check if the office and workerId match
             for (const officerDoc of officerSnapshot.docs) {
                 console.log('Officer ID:', officerDoc.id);
 
-                // Reference to the `offices` collection for the current officer
                 const officeDocRef = doc(db, 'officers', officerDoc.id, 'offices', officeid);
                 const officeDocSnap = await getDoc(officeDocRef);
                 console.log('Office Document Snapshot:', officeDocSnap.exists() ? 'Office found' : 'Office not found');
@@ -38,7 +35,6 @@ const FormFieldWorker = () => {
                     const officeData = officeDocSnap.data();
                     console.log('Office Data:', officeData);
 
-                    // Reference to the `workers` collection within the `offices`
                     const workerDocRef = doc(db, 'officers', officerDoc.id, 'offices', officeid, 'workers', workerid);
                     const workerDocSnap = await getDoc(workerDocRef);
                     console.log('Worker Document Snapshot:', workerDocSnap.exists() ? 'Worker found' : 'Worker not found');
@@ -47,17 +43,14 @@ const FormFieldWorker = () => {
                         const workerData = workerDocSnap.data();
                         console.log('Worker Data:', workerData);
 
-                        // Store worker data in AsyncStorage
                         await AsyncStorage.setItem('officerId',officerDoc.id);
                         await AsyncStorage.setItem('workerId', workerid);
                         await AsyncStorage.setItem('officeId', officeid);
                         await AsyncStorage.setItem('officeData', JSON.stringify(officeData));
                         await AsyncStorage.setItem('workerData', JSON.stringify(workerData));
-                        await AsyncStorage.setItem('isOfficer', JSON.stringify(false));
 
                         console.log('Login successful');
 
-                        // Navigate to worker's home page
                         router.replace('/home-worker');
                         validWorkerFound = true;
                         break;

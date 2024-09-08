@@ -90,6 +90,5 @@ TaskManager.defineTask(YOUR_TASK_NAME, async ({ data: { eventType, region }, err
       await handleCheckIn(officeId, workerId);
   } else if (eventType === GeofencingEventType.Exit) {
       await handleCheckOut(officeId, workerId);
-      console.log("You've left the region:", region);
   }
 });
