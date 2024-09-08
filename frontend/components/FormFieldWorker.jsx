@@ -99,7 +99,6 @@ const FormFieldWorker = () => {
                 disabled={isLoading}
             />
             {isLoading && <ActivityIndicator size="large" color="#fff" />}
-            <Text>Not A Registered User yet? Sign In</Text>
         </View>
     );
 };

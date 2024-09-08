@@ -4,9 +4,8 @@ import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { doc, getDocs, setDoc, updateDoc, collection, query, where } from 'firebase/firestore';
+import { doc, getDocs, setDoc, updateDoc, collection, query, where, arrayUnion } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-
 
 const YOUR_TASK_NAME = 'bg-loc-check';
 
@@ -16,7 +15,7 @@ const HomeWorker = () => {
 
     const getDistance = (lat1, lon1, lat2, lon2) => {
         const toRadians = (deg) => deg * (Math.PI / 180);
-        const R = 6371e3;
+        const R = 6371e3; // Radius of the Earth in meters
 
         const dLat = toRadians(lat2 - lat1);
         const dLon = toRadians(lon2 - lon1);
@@ -39,7 +38,6 @@ const HomeWorker = () => {
     
         try {
             const checkInsRef = collection(db, `officers/${officerId}/offices/${officeId}/workers/${workerId}/checkins`);
-            
             const q = query(checkInsRef, where('date', '==', date));
             const querySnapshot = await getDocs(q);
     
@@ -48,16 +46,21 @@ const HomeWorker = () => {
                 const docRef = doc(db, docSnap.ref.path);
     
                 const data = docSnap.data();
-                if (!data.checkInTime) {
-                    await updateDoc(docRef, { checkInTime: currentTime });
-                    console.log('Check-in time recorded.');
-                } 
+                await updateDoc(docRef, {
+                    sessions: arrayUnion({
+                        checkInTime: currentTime,
+                        checkOutTime: null,
+                    }),
+                });
+                console.log('New check-in session recorded.');
             } else {
                 const newDocRef = doc(checkInsRef, date);
                 await setDoc(newDocRef, {
                     date: date,
-                    checkInTime: currentTime,
-                    checkOutTime: null,
+                    sessions: [{
+                        checkInTime: currentTime,
+                        checkOutTime: null,
+                    }],
                 });
                 console.log('New check-in record created.');
             }
@@ -128,9 +131,11 @@ const HomeWorker = () => {
                         latitude: parseFloat(officeCoordinates.latitude),
                         longitude: parseFloat(officeCoordinates.longitude),
                         radius: 200
-                    }]).then(()=> {console.log("geofencing...")}).catch((error) => {
-                        console.error('Error starting geofencing', error);
+                    }]).then(() => {
+                        console.log("Geofencing started...");
                         setIsGeofencingActive(true);
+                    }).catch((error) => {
+                        console.error('Error starting geofencing', error);
                     });
                 } catch (error) {
                     console.error('Error starting geofencing', error);
@@ -139,7 +144,9 @@ const HomeWorker = () => {
         };
 
         const stopGeofencing = async () => {
-            await Location.stopGeofencingAsync(YOUR_TASK_NAME).then(()=> {console.log("stopped geofencing")}).catch((error) => {
+            await Location.stopGeofencingAsync(YOUR_TASK_NAME).then(() => {
+                console.log("Geofencing stopped.");
+            }).catch((error) => {
                 console.error('Error stopping geofencing', error);
             });
         };

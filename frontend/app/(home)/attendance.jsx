@@ -7,7 +7,6 @@ import { Picker } from '@react-native-picker/picker';
 import CustomButton from '../../components/CustomButton';
 import { db } from '../firebaseConfig';
 
-
 const CheckAttendance = () => {
   const [workerId, setWorkerId] = useState('');
   const [officeId, setOfficeId] = useState('');
@@ -22,7 +21,6 @@ const CheckAttendance = () => {
       setError(null);
 
       try {
-        const officerId = await AsyncStorage.getItem('userId');
         const officeIds = await AsyncStorage.getItem('officeIds');
         if (officeIds) {
           setOffices(JSON.parse(officeIds));
@@ -65,10 +63,14 @@ const CheckAttendance = () => {
         return;
       }
 
-      const fetchedData = snapshot.docs.map(doc => ({
-        date: doc.id,
-        ...doc.data()
-      }));
+      // Map the snapshot data to include the date and sessions list
+      const fetchedData = snapshot.docs.map(doc => {
+        const sessions = doc.data().sessions || [];
+        return {
+          date: doc.id,  // Document ID is the date
+          sessions
+        };
+      });
 
       setData(fetchedData);
     } catch (error) {
@@ -80,29 +82,31 @@ const CheckAttendance = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-primary p-4">
-      <View className="mb-4">
+    <SafeAreaView className="flex-1 bg-primary px-10 justify-center">
+      <View className="mt-10">
         <TextInput
-          className="border-2 border-black-100 rounded-md px-4 py-2 text-white font-psemibold focus:border-white"
+          className="border-2 border-black-100 bg-black-100 rounded-md px-4 h-20 py-2 mb-10 text-white font-psemibold focus:border-white"
           placeholder="Enter Worker ID"
           placeholderTextColor="white"
           value={workerId}
           onChangeText={text => setWorkerId(text)}
         />
-        <View className="border border-gray-300 rounded p-2 bg-black-100">
+        <View className="border border-black-100 focus:border-white rounded-md p-2 bg-black-100">
           <Picker
             selectedValue={officeId}
             onValueChange={(itemValue) => setOfficeId(itemValue)}
+            dropdownIconColor={'white'}
+            style={{ color: 'white', fontFamily: "Poppins"}}
           >
             <Picker.Item label="Select Office ID" value="" />
             {offices.map((office) => (
-              <Picker.Item key={office} label={office} value={office} />
+              <Picker.Item key={office} label={office} value={office}  />
             ))}
           </Picker>
         </View>
         <CustomButton
-        title={'Fetch Attendance Records'}
-        handlePress={fetchAttendanceRecords}
+          title={'Fetch Attendance Records'}
+          handlePress={fetchAttendanceRecords}
         />
       </View>
       {loading ? (
@@ -110,19 +114,26 @@ const CheckAttendance = () => {
       ) : error ? (
         <Text className="text-red-500">Error fetching data</Text>
       ) : (
-        <ScrollView contentContainerStyle="p-2">
-          <View className="flex-row border-b border-gray-300 mb-2">
-            <Text className="flex-1 font-semibold text-white p-2">Date</Text>
-            <Text className="flex-1 font-semibold text-white p-2">Check In</Text>
-            <Text className="flex-1 font-semibold text-white p-2">Check Out</Text>
-          </View>
-          {data.map((item) => (
-            <View key={item.date} className="flex-row border-b border-gray-200 mb-1">
-              <Text className="flex-1 text-white p-2">{item.date}</Text>
-              <Text className="flex-1 text-white p-2">{formatTime(item.checkInTime) || 'N/A'}</Text>
-              <Text className="flex-1 text-white p-2">{formatTime(item.checkOutTime) || 'N/A'}</Text>
-            </View>
-          ))}
+        <ScrollView className="p-2 mt-4 bg-black-100 border-2 border-black-200 rounded-sm">
+          {data.length === 0 ? (
+            <Text className="text-white">No attendance records found.</Text>
+          ) : (
+            data.map((item) => (
+              <View key={item.date} className="mb-4">
+                <Text className="text-white p-2 font-semibold">Date: {item.date}</Text>
+                {item.sessions.length > 0 ? (
+                  item.sessions.map((session, index) => (
+                    <View key={index} className="flex-row border-b border-gray-200 mb-1">
+                      <Text className="flex-1 text-white p-2">Check In: {formatTime(session.checkInTime) || 'N/A'}</Text>
+                      <Text className="flex-1 text-white p-2">Check Out: {formatTime(session.checkOutTime) || 'N/A'}</Text>
+                    </View>
+                  ))
+                ) : (
+                  <Text className="text-white p-2">No sessions for this date.</Text>
+                )}
+              </View>
+            ))
+          )}
         </ScrollView>
       )}
     </SafeAreaView>
