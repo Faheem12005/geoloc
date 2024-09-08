@@ -96,7 +96,7 @@ const CheckAttendance = () => {
             selectedValue={officeId}
             onValueChange={(itemValue) => setOfficeId(itemValue)}
             dropdownIconColor={'white'}
-            style={{ color: 'white', fontFamily: "Poppins"}}
+            style={{ color: 'white'}}
           >
             <Picker.Item label="Select Office ID" value="" />
             {offices.map((office) => (
